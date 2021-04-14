@@ -1,0 +1,43 @@
+# Patients including their intervention details and unit & doctors
+SELECT 
+CONCAT (h.last_name, ', ',h.first_name) as medical_proffesional, 
+r.role_name,
+t.treatment_name,
+u.unit_name,
+t.price,
+CONCAT (p.last_name, ', ',p.first_name) as Patient,
+pt.performance_date
+FROM patient p
+INNER JOIN performance pt ON pt.pk_performance_id = p.fk_performance_id
+INNER JOIN treatment t ON t.pk_treatment_id = pt.fk_treatment_id
+INNER Join health_staff h ON h.pk_staff_id = pt.fk_staff_id
+INNER JOIN role r ON r.pk_role_id = h.fk_role_id 
+INNER JOIN unit u ON u.pk_unit_id = h.fk_unit_id
+
+
+SELECT 
+h.last_name, 
+r.role_name,
+SUM(t.price) as revenue
+FROM performance pt
+INNER JOIN treatment t ON t.pk_treatment_id = pt.fk_treatment_id
+INNER Join health_staff h ON h.pk_staff_id = pt.fk_staff_id
+INNER JOIN role r ON r.pk_role_id = h.fk_role_id
+GROUP BY last_name, role_name
+
+
+SELECT 
+CONCAT ( p.last_name, ', ',p.first_name)
+FROM patient p
+LEFT JOIN performance pt ON pt.pk_performance_id = p.fk_performance_id
+WHERE p.fk_performance_id is NULL
+
+
+SELECT
+CONCAT (h.last_name, ', ',h.first_name) as medical_proffesional, 
+role_name
+FROM health_staff h 
+INNER JOIn role r ON r.pk_role_id = h.fk_role_id
+WHERE r.head = TRUE
+
+
